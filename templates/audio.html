@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Audio Player</title>
+    <style>
+        body {
+            text-align: center;
+            font-family: Cambria, sans-serif;
+            background-color: black;
+            color: white;
+        }
+        #player {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        audio {
+            width: 100%;
+            max-width: 600px;
+        }
+        .song-container {
+            display: flex;
+            align-items: center;
+            margin: 10px;
+            cursor: pointer;
+            flex-wrap: wrap;
+        }
+        .song-container .song {
+            width: 25%;
+            padding: 10px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .song-image {
+            width: 100px; /* Set your preferred width here */
+            height: 100px; /* Set your preferred height here */
+        }
+        .song-title {
+            font-size: 18px;
+        }
+        .button-container {
+            display: flex;
+            margin: 10px;
+        }
+        .button-container button {
+            margin: 5px;
+        }
+    </style>
+</head>
+<body>
+    <h1> Audio Player</h1>
+    <div id="player">
+        <audio id="audio" controls onended="nextSong()">
+            Your browser does not support the audio element.
+        </audio>
+        <div class="button-container">
+            <button id="previousBtn">Previous</button>
+            <button id="playBtn">Play</button>
+            <button id="pauseBtn">Pause</button>
+            <button id="nextBtn">Next</button>
+            <button id="shuffleBtn">Shuffle</button>
+        </div>
+        <div id="songList" class="song-container"></div>
+        <div id="nowPlaying">Now Playing: </div>
+    </div>
+
+    <script>
+        const audio = document.getElementById("audio");
+        const playBtn = document.getElementById("playBtn");
+        const pauseBtn = document.getElementById("pauseBtn");
+        const previousBtn = document.getElementById("previousBtn");
+        const nextBtn = document.getElementById("nextBtn");
+        const shuffleBtn = document.getElementById("shuffleBtn");
+        const songList = document.getElementById("songList");
+        const nowPlaying = document.getElementById("nowPlaying");
+
+        let currentSong = 0;
+function playSong(songIndex) {
+    if (audio.src !== songs[songIndex].audioFile) {
+        audio.src = songs[songIndex].audioFile;
+        nowPlaying.textContent = "Now Playing: " + songs[songIndex].title;
+    }
+    audio.play();
+}
+
+// Define the pauseSong function as you already have
+function pauseSong() {
+    audio.pause();
+}
+
+// Define the nextSong function to play the next song
+function nextSong() {
+    currentSong = (currentSong + 1) % songs.length;
+    playSong(currentSong);
+}
+
+// Define the previousSong function to play the previous song
+function previousSong() {
+    currentSong = (currentSong - 1 + songs.length) % songs.length;
+    playSong(currentSong);
+}
+
+// Define the shuffleSongs function to play a random song
+function shuffleSongs() {
+    currentSong = Math.floor(Math.random() * songs.length);
+    playSong(currentSong);
+}
+
+// Add event listeners to the buttons to control the playback
+playBtn.addEventListener("click", () => {
+    playSong(currentSong);
+});
+
+pauseBtn.addEventListener("click", () => {
+    pauseSong();
+});
+
+previousBtn.addEventListener("click", () => {
+    previousSong();
+});
+
+nextBtn.addEventListener("click", () => {
+    nextSong();
+});
+
+shuffleBtn.addEventListener("click", () => {
+    shuffleSongs();
+});
+        // Define songs and associated image sources
+       
+            // Song data with titles, audio files, and image sources
+            const songs = [];
+	for (let i = 1; i <= 48; i++) {
+    const title =` Song${i}`;
+    const audioFile = `static/${i}.mp3`;
+    const imageSource = `static/${i}.jpg`;
+    songs.push({
+        title,
+        audioFile,
+        imageSource,
+    });
+}
+        function playSong(songIndex) {
+            if (audio.src !== songs[songIndex].audioFile) {
+                audio.src = songs[songIndex].audioFile;
+                nowPlaying.textContent = "Now Playing: " + songs[songIndex].title;
+            }
+            audio.play();
+        }
+        function pauseSong() {
+            audio.pause();
+        }
+        function nextSong() {
+            currentSong = (currentSong + 1) % songs.length;
+            playSong(currentSong);
+        }
+        function previousSong() {
+            currentSong = (currentSong - 1 + songs.length) % songs.length;
+            playSong(currentSong);
+        }
+        function shuffleSongs() {
+            currentSong = Math.floor(Math.random() * songs.length);
+            playSong(currentSong);
+        }
+function updateSongList() {
+    for (let i = 0; i < songs.length; i += 8) {
+        const columnContainer = document.createElement("div");
+        columnContainer.className = "song-column";
+        songList.appendChild(columnContainer);
+
+        for (let j = i; j < i + 8 && j < songs.length; j++) {
+            const song = songs[j];
+            const songContainer = document.createElement("div");
+            songContainer.className = "song";
+            const songImage = document.createElement("img");
+            songImage.className = "song-image";
+            songImage.src = song.imageSource;
+            const songTitle = document.createElement("div");
+            songTitle.className = "song-title";
+            songTitle.textContent = song.title;
+            songContainer.appendChild(songImage);
+            songContainer.appendChild(songTitle);
+            songContainer.addEventListener("click", () => {
+                playSong(j);
+            });
+            columnContainer.appendChild(songContainer);
+        }
+    }
+}
+
+updateSongList();
+
+    </script>
+</body>
+</html>
